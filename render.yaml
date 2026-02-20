@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: portfolio-app
+    name: portfolio
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn portfolio-app:app
+    startCommand: gunicorn portfolio:app
     envVars:
       - key: SECRET_KEY
         generateValue: true
@@ -14,3 +14,4 @@ services:
       mountPath: /opt/render/project/src/static/uploads
 
       sizeGB: 1
+

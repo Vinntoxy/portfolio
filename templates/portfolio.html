@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Portfolio</title>
+    <meta name="description" content="Graphic Designer and SEO Copywriter Portfolio">
+    <title>Portfolio - Kelvin Maina</title>
     <style>
+        /* ===== RESET & BASE STYLES ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         :root {
+            /* Dark theme (default) */
             --bg-primary: #0b0d17;
             --bg-secondary: #1b1f36;
             --text-primary: #ffffff;
@@ -20,22 +23,71 @@
             --accent: #e63946;
             --accent-hover: #ff4d5a;
             --border: #8892b0;
+            --card-bg: #1b1f36;
             --shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
             --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
-        
+
+        [data-theme="light"] {
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --text-primary: #0b0d17;
+            --text-secondary: #1b1f36;
+            --text-muted: #4a5568;
+            --accent: #e63946;
+            --accent-hover: #c82333;
+            --border: #dee2e6;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.1);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         /* ===== HEADER & NAVIGATION ===== */
         header {
             background-color: var(--bg-secondary);
-            padding: 1rem 2rem;
+            padding: 2rem 2rem 1.5rem;
+            text-align: center;
             border-bottom: 3px solid var(--accent);
             box-shadow: var(--shadow);
             position: sticky;
@@ -44,20 +96,24 @@
             backdrop-filter: blur(10px);
         }
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
+        header h1 {
+            color: var(--accent);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .logo a {
-            color: var(--accent);
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-decoration: none;
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== NAVIGATION BAR ===== */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
 
         .nav-menu {
@@ -99,12 +155,20 @@
             width: 80%;
         }
 
-        .nav-menu a.active {
-            color: var(--accent);
+        .nav-menu a.admin-link {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
         }
 
-        .nav-menu a.active::after {
-            width: 80%;
+        .nav-menu a.admin-link:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .nav-menu a.admin-link::after {
+            display: none;
         }
 
         /* ===== HAMBURGER MENU ===== */
@@ -126,237 +190,35 @@
             transition: var(--transition);
         }
 
-        /* ===== LOGIN CONTAINER ===== */
-        .login-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .login-container {
+        /* ===== THEME TOGGLE BUTTON ===== */
+        .theme-btn {
             background: var(--bg-secondary);
-            padding: 3rem 2.5rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 420px;
-            border: 1px solid var(--border);
-            animation: fadeIn 0.6s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
-        }
-        
-        h1 {
-            color: var(--accent);
-            text-align: center;
-            margin-bottom: 0.5rem;
-            font-size: 2.2rem;
-            font-weight: 600;
-        }
-        
-        .subtitle {
-            color: var(--text-muted);
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        label {
-            display: block;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        
-        .input-wrapper {
-            position: relative;
-        }
-        
-        .input-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-        
-        input {
-            width: 100%;
-            padding: 14px 14px 14px 45px;
-            background: var(--bg-primary);
-            border: 2px solid var(--border);
-            border-radius: 12px;
             color: var(--text-primary);
-            font-size: 1rem;
-            transition: var(--transition);
-            outline: none;
-        }
-        
-        input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
-        }
-        
-        input::placeholder {
-            color: var(--text-muted);
-            opacity: 0.5;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
+            border: 2px solid var(--accent);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 1.1rem;
-            transition: var(--transition);
-        }
-        
-        .password-toggle:hover {
-            color: var(--accent);
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .remember-me input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
-            accent-color: var(--accent);
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        
-        .remember-me label {
-            margin-bottom: 0;
-            cursor: pointer;
-            color: var(--text-muted);
-        }
-        
-        button {
-            width: 100%;
-            padding: 14px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(230, 57, 70, 0.4);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .error {
-            background: rgba(230, 57, 70, 0.1);
-            color: var(--accent);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 1rem;
-            display: none;
-            border: 1px solid var(--accent);
             font-size: 0.9rem;
-        }
-        
-        .login-footer {
-            margin-top: 2rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border);
-            padding-top: 1.5rem;
-        }
-        
-        .login-footer span {
-            color: var(--accent);
-        }
-        
-        /* Loading state */
-        button.loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-        
-        button.loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
-            border: 2px solid transparent;
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            font-weight: 600;
+            transition: var(--transition);
+            margin-left: 0.5rem;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
-        .shake {
-            animation: shake 0.5s ease-in-out;
+        .theme-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
         }
 
         /* ===== MOBILE NAVIGATION ===== */
         @media (max-width: 768px) {
             .hamburger {
                 display: block;
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
             }
 
             .hamburger.active span:nth-child(2) {
@@ -374,7 +236,7 @@
             .nav-menu {
                 position: fixed;
                 left: -100%;
-                top: 70px;
+                top: 120px;
                 gap: 0;
                 flex-direction: column;
                 background-color: var(--bg-secondary);
@@ -400,28 +262,430 @@
                 font-size: 1.2rem;
             }
 
-            .login-container {
-                padding: 2rem 1.5rem;
-                margin: 1rem;
+            .theme-btn {
+                margin: 1rem auto 0;
+                display: block;
+                width: fit-content;
+            }
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .about-container p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .about-container img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border: 4px solid var(--accent);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .about-container img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(230, 57, 70, 0.2);
+        }
+
+        /* ===== SKILLS SECTION ===== */
+        #skills-container {
+            margin-top: 2rem;
+        }
+
+        #skills-container h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .skill-item {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .skill-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 15px 30px rgba(230, 57, 70, 0.15);
+        }
+
+        .skill-item h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .certifications {
+            margin-top: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border);
+        }
+
+        .certifications h4 {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .certifications ul {
+            list-style: none;
+        }
+
+        .certifications li {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .certifications a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .certifications a:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        /* ===== PORTFOLIO SECTION ===== */
+        .portfolio {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .portfolio-item {
+            background: var(--card-bg);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portfolio-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(230, 57, 70, 0.2);
+        }
+
+        .portfolio-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .portfolio-item h3 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== IMAGES MODAL ===== */
+        #images-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 13, 23, 0.98);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 3rem;
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        [data-theme="light"] #images-container {
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+
+        #images-container img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 3px solid var(--accent);
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        #images-container img:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-hover);
+            box-shadow: 0 20px 40px rgba(230, 57, 70, 0.4);
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 1001;
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .close-btn:hover {
+            background-color: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        #contact {
+            background-color: var(--bg-secondary);
+            border-radius: 20px;
+            margin: 2rem auto;
+            padding: 3rem 2rem;
+        }
+
+        #contact p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info ul {
+            list-style: none;
+        }
+
+        .contact-info li {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .contact-info strong {
+            color: var(--accent);
+            min-width: 100px;
+            display: inline-block;
+        }
+
+        .contact-info ul ul {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .contact-info a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent-hover);
+            transform: translateX(5px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--bg-secondary);
+            border-top: 3px solid var(--accent);
+            margin-top: 4rem;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 968px) {
+            .about-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .about-container img {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            h2 {
+                text-align: center;
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 3rem 1.5rem;
             }
 
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            #images-container {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                padding: 2rem;
+                gap: 1rem;
+            }
+
+            .close-btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .portfolio {
+                grid-template-columns: 1fr;
+            }
+
+            #images-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            #images-container img {
+                height: 200px;
+            }
+
+            .contact-info li {
+                font-size: 0.95rem;
+                word-break: break-word;
+            }
+
+            .contact-info strong {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* ===== LOADING STATES ===== */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-hover);
         }
     </style>
 </head>
 <body>
     <header>
+        <h1 id="profile-name">24 Graphics</h1>
+        <p id="profile-title">Graphic Designers & SEO Copywriters | Crafting Visuals and Words that Convert</p>
         <nav class="navbar">
-            <div class="logo">
-                <a href="/">Kelvin Maina</a>
-            </div>
             <ul class="nav-menu" id="nav-menu">
-                <li><a href="/#about">About Me</a></li>
-                <li><a href="/#portfolio">Portfolio</a></li>
-                <li><a href="/#contact">Contact</a></li>
-                <li><a href="/admin" class="active">Admin</a></li>
+                <li><a href="#about">About Me</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="/admin" class="admin-link">Admin</a></li>
+                <li><button id="theme-toggle" class="theme-btn">🌙 Dark Mode</button></li>
             </ul>
             <div class="hamburger" id="hamburger">
                 <span></span>
@@ -431,52 +695,58 @@
         </nav>
     </header>
 
-    <div class="login-wrapper">
-        <div class="login-container">
-            <h1>Admin Access</h1>
-            <div class="subtitle">Enter your credentials to manage your portfolio</div>
-            
-            <div class="form-group">
-                <label>Username</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">👤</span>
-                    <input type="text" id="username" placeholder="Enter your username" autofocus>
+    <section id="about" class="section">
+        <h2>About Me</h2>
+        <div class="about-container">
+            <div>
+                <p id="profile-bio">Hi! I'm Kelvin Maina, a passionate Graphic Designer and SEO Copywriter at 24 Graphics dedicated to creating impactful visuals and compelling content. With a Bachelor's degree in Community Development and Information Technology from The Cooperative University of Kenya, I bring a unique perspective to design and communication.</p>
+                <div id="skills-container">
+                    <div class="loading">Loading skills</div>
                 </div>
             </div>
-            
-            <div class="form-group">
-                <label>Password</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="password" placeholder="Enter your password">
-                    <span class="password-toggle" onclick="togglePassword()">👁️</span>
-                </div>
-            </div>
-            
-            <div class="remember-me">
-                <input type="checkbox" id="remember">
-                <label for="remember">Remember me for 30 days</label>
-            </div>
-            
-            <button onclick="login()" id="login-btn">Login to Dashboard</button>
-            
-            <div class="error" id="error-message">
-                Invalid username or password. Please try again.
-            </div>
-            
-            <div class="login-footer">
-                <span>⚡</span> Secure Admin Access <span>⚡</span>
-            </div>
+            <img id="profile-image" src="/static/uploads/profile/default-profile.jpg" alt="Profile Photo" onerror="this.src='/static/images/default-profile.jpg'">
         </div>
-    </div>
-    
+    </section>
+
+    <section id="portfolio" class="section">
+        <h2>Portfolio</h2>
+        <div class="portfolio" id="portfolio-categories">
+            <div class="loading">Loading portfolio</div>
+        </div>
+        <div id="images-container">
+            <button class="close-btn">Close</button>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <h2>Contact</h2>
+        <p>If you'd like to work together or have any questions, feel free to reach out!</p>
+        <div class="contact-info">
+            <ul>
+                <li><strong>Email:</strong> maishkevo09@gmail.com</li>
+                <li><strong>Phone:</strong> +254742032351</li>
+                <li><strong>Address:</strong> Nairobi, Kenya</li>
+                <li><strong>Social Media:</strong> 
+                    <ul>
+                        <li><a href="https://twitter.com/yourprofile" target="_blank">Twitter</a></li>
+                        <li><a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a></li>
+                        <li><a href="https://instagram.com/yourprofile" target="_blank">Instagram</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Kelvin Maina. All Rights Reserved.</p>
+    </footer>
+
     <script>
         // ===== HAMBURGER MENU TOGGLE =====
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('nav-menu');
 
-        hamburger.addEventListener('click', (e) => {
-            e.stopPropagation();
+        hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
@@ -497,108 +767,197 @@
             }
         });
 
-        // Toggle password visibility
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.querySelector('.password-toggle');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.textContent = '🔓';
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        let isDark = true;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeToggle.textContent = '☀️ Light Mode';
+            isDark = false;
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '☀️ Light Mode';
+                localStorage.setItem('theme', 'light');
             } else {
-                passwordInput.type = 'password';
-                toggleIcon.textContent = '👁️';
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '🌙 Dark Mode';
+                localStorage.setItem('theme', 'dark');
             }
-        }
-        
-        // Handle login
-        async function login() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const remember = document.getElementById('remember').checked;
-            const loginBtn = document.getElementById('login-btn');
-            const errorDiv = document.getElementById('error-message');
-            
-            // Validate inputs
-            if (!username || !password) {
-                errorDiv.textContent = 'Please enter both username and password';
-                errorDiv.style.display = 'block';
-                document.querySelector('.login-container').classList.add('shake');
-                setTimeout(() => {
-                    document.querySelector('.login-container').classList.remove('shake');
-                }, 500);
-                return;
-            }
-            
-            // Show loading state
-            loginBtn.classList.add('loading');
-            loginBtn.disabled = true;
-            errorDiv.style.display = 'none';
-            
-            try {
-                const response = await fetch('/api/admin/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        username, 
-                        password,
-                        remember 
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Successful login - redirect to dashboard
-                    window.location.href = '/admin/dashboard';
-                } else {
-                    // Failed login
-                    errorDiv.textContent = data.message || 'Invalid username or password';
-                    errorDiv.style.display = 'block';
-                    document.querySelector('.login-container').classList.add('shake');
-                    setTimeout(() => {
-                        document.querySelector('.login-container').classList.remove('shake');
-                    }, 500);
-                    
-                    // Clear password field
-                    document.getElementById('password').value = '';
+            isDark = !isDark;
+        });
+
+        // Load profile data
+        fetch('/api/profile')
+            .then(response => response.json())
+            .then(profile => {
+                if (profile.name) document.getElementById('profile-name').textContent = profile.name;
+                if (profile.title) document.getElementById('profile-title').textContent = profile.title;
+                if (profile.bio) document.getElementById('profile-bio').textContent = profile.bio;
+                if (profile.profile_image_url) {
+                    document.getElementById('profile-image').src = profile.profile_image_url;
                 }
-            } catch (error) {
-                console.error('Login error:', error);
-                errorDiv.textContent = 'Connection error. Please try again.';
-                errorDiv.style.display = 'block';
-            } finally {
-                // Remove loading state
-                loginBtn.classList.remove('loading');
-                loginBtn.disabled = false;
-            }
+            })
+            .catch(error => console.error('Error loading profile:', error));
+
+        // Load skills
+        fetch('/api/skills')
+            .then(response => response.json())
+            .then(skills => {
+                const container = document.getElementById('skills-container');
+                
+                if (skills.length === 0) {
+                    container.innerHTML = '<p>No skills added yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = '<h3>Skills & Certifications</h3>';
+                
+                skills.forEach(skill => {
+                    const skillDiv = document.createElement('div');
+                    skillDiv.className = 'skill-item';
+                    
+                    let certsHTML = '';
+                    if (skill.certifications && skill.certifications.length > 0) {
+                        certsHTML = `
+                            <div class="certifications">
+                                <h4>Certifications:</h4>
+                                <ul>
+                                    ${skill.certifications.map(cert => `
+                                        <li>
+                                            ${cert.credential_url ? 
+                                                `<a href="${cert.credential_url}" target="_blank">${cert.name} - ${cert.issuer}</a>` :
+                                                `${cert.name} - ${cert.issuer}`
+                                            }
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    skillDiv.innerHTML = `
+                        <h3>${skill.icon || '📌'} ${skill.name}</h3>
+                        ${certsHTML}
+                    `;
+                    container.appendChild(skillDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading skills:', error);
+                document.getElementById('skills-container').innerHTML = '<p>Error loading skills.</p>';
+            });
+
+        // Load portfolio categories
+        function loadPortfolioCategories() {
+            const container = document.getElementById('portfolio-categories');
+            container.innerHTML = ''; // Clear loading message
+            
+            const categories = ['logos', 'posters', 'illustrations'];
+            let hasContent = false;
+            
+            categories.forEach(cat => {
+                fetch(`/api/section/${cat}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.images && data.images.length > 0) {
+                            hasContent = true;
+                            const div = document.createElement('div');
+                            div.className = 'portfolio-item';
+                            div.setAttribute('data-category', cat);
+                            div.innerHTML = `<h3>${data.title || cat.charAt(0).toUpperCase() + cat.slice(1)}</h3>`;
+                            container.appendChild(div);
+                        }
+                    })
+                    .catch(error => console.error(`Error loading ${cat}:`, error));
+            });
+
+            // If no content after a delay, show message
+            setTimeout(() => {
+                if (!hasContent && container.children.length === 0) {
+                    container.innerHTML = '<p>No portfolio items added yet.</p>';
+                }
+            }, 2000);
         }
-        
-        // Allow Enter key to submit
-        document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                login();
+
+        loadPortfolioCategories();
+
+        // Portfolio item click handler
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.portfolio-item')) {
+                const item = e.target.closest('.portfolio-item');
+                const category = item.getAttribute('data-category');
+                
+                // Fetch images for this category
+                fetch(`/api/section/${category}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const container = document.getElementById('images-container');
+                        container.innerHTML = '<button class="close-btn">Close</button>';
+                        
+                        if (data.images && data.images.length > 0) {
+                            data.images.forEach(img => {
+                                const imgEl = document.createElement('img');
+                                imgEl.src = img.url;
+                                imgEl.alt = img.caption || category;
+                                imgEl.loading = 'lazy';
+                                container.appendChild(imgEl);
+                            });
+                        } else {
+                            const msg = document.createElement('p');
+                            msg.textContent = 'No images in this category yet.';
+                            msg.style.cssText = 'color: var(--text-muted); text-align: center; grid-column: 1/-1;';
+                            container.appendChild(msg);
+                        }
+                        
+                        container.style.display = 'grid';
+                        document.body.style.overflow = 'hidden';
+                    })
+                    .catch(error => {
+                        console.error('Error loading images:', error);
+                        alert('Error loading images');
+                    });
             }
         });
-        
-        // Auto-focus username field on page load
-        window.addEventListener('load', () => {
-            document.getElementById('username').focus();
+
+        // Close button handler
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('close-btn')) {
+                document.getElementById('images-container').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         });
-        
-        // Clear error when user starts typing
-        document.getElementById('username').addEventListener('input', () => {
-            document.getElementById('error-message').style.display = 'none';
+
+        // Close modal when clicking outside images
+        document.getElementById('images-container').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('images-container')) {
+                document.getElementById('images-container').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         });
-        
-        document.getElementById('password').addEventListener('input', () => {
-            document.getElementById('error-message').style.display = 'none';
+
+        // Handle smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Close mobile menu if open
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            });
         });
-        
-        // Add demo credentials hint (remove in production)
-        console.log('Demo credentials: admin / admin123');
     </script>
 </body>
 </html>

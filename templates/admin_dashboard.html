@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Portfolio Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0b0d17;
+            --bg-secondary: #1b1f36;
+            --text-primary: #ffffff;
+            --text-secondary: #ccd6f6;
+            --text-muted: #8892b0;
+            --accent: #e63946;
+            --accent-hover: #ff4d5a;
+            --border: #8892b0;
+            --card-bg: #1b1f36;
+            --shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+            --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* ===== HEADER & NAVIGATION ===== */
+        .dashboard-header {
+            background-color: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .logo a {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent);
+        }
+
+        .nav-menu a:hover::after {
+            width: 80%;
+        }
+
+        .nav-menu a.active {
+            color: var(--accent);
+        }
+
+        .nav-menu a.active::after {
+            width: 80%;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.5rem 1rem;
+            background: var(--bg-primary);
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            margin-left: 1rem;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-name {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 1rem;
+        }
+
+        .logout-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        /* ===== HAMBURGER MENU ===== */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+            z-index: 200;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        /* ===== DASHBOARD STATS ===== */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(230, 57, 70, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .stat-info h3 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .stat-info .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        /* ===== DASHBOARD CONTAINER ===== */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .admin-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-header h2 {
+            color: var(--accent);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h2 i {
+            font-size: 1.5rem;
+        }
+
+        .badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* ===== UPLOAD AREA ===== */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(230, 57, 70, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* ===== ITEM LIST ===== */
+        .item-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .item {
+            background: var(--bg-primary);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .item:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .item-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--border);
+        }
+
+        .item-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(230, 57, 70, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .item-actions button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .item-actions button:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .item-actions .delete-btn:hover {
+            background: var(--danger);
+        }
+
+        /* ===== FORM STYLES ===== */
+        .add-form {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        /* ===== IMAGE GRID ===== */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .image-grid-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .image-grid-item:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .image-grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-grid-item .delete-img {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background: rgba(220, 53, 69, 0.9);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .image-grid-item:hover .delete-img {
+            opacity: 1;
+        }
+
+        .image-grid-item .delete-img:hover {
+            background: var(--danger);
+            transform: scale(1.1);
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px;
+            font-size: 0.7rem;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-header h3 {
+            color: var(--accent);
+            font-size: 1.3rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+        }
+
+        /* ===== LOADING STATES ===== */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            z-index: 2000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        .toast.warning {
+            background: var(--warning);
+            color: var(--bg-primary);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== EMPTY STATES ===== */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* ===== MOBILE NAVIGATION ===== */
+        @media (max-width: 968px) {
+            .hamburger {
+                display: block;
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                gap: 0;
+                flex-direction: column;
+                background-color: var(--bg-secondary);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+                padding: 2rem 0;
+                border-top: 2px solid var(--accent);
+                border-bottom: 2px solid var(--accent);
+                z-index: 150;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                margin: 1.5rem 0;
+            }
+
+            .nav-menu a {
+                font-size: 1.2rem;
+            }
+
+            .user-info {
+                margin: 1rem 0;
+            }
+
+            .logout-btn {
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                padding: 1rem;
+            }
+
+            .dashboard-container {
+                padding: 0 1rem 1rem;
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .stat-info .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/">Kelvin Maina</a>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="/#about">About Me</a></li>
+                <li><a href="/#portfolio">Portfolio</a></li>
+                <li><a href="/#contact">Contact</a></li>
+                <li><a href="/admin" class="active">Admin</a></li>
+                <li>
+                    <div class="user-info">
+                        <div class="user-avatar" id="user-avatar">A</div>
+                        <span class="user-name" id="username-display">Admin</span>
+                    </div>
+                </li>
+                <li>
+                    <button class="logout-btn" onclick="logout()">
+                        <span>🚪</span>
+                        Logout
+                    </button>
+                </li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Stats Section -->
+    <div class="stats-container" id="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">🎨</div>
+            <div class="stat-info">
+                <h3>Total Skills</h3>
+                <div class="stat-number" id="total-skills">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📜</div>
+            <div class="stat-info">
+                <h3>Certifications</h3>
+                <div class="stat-number" id="total-certs">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📁</div>
+            <div class="stat-info">
+                <h3>Projects</h3>
+                <div class="stat-number" id="total-projects">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🖼️</div>
+            <div class="stat-info">
+                <h3>Total Images</h3>
+                <div class="stat-number" id="total-images">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Profile Section -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h2><i>👤</i> Profile Picture</h2>
+                <span class="badge">1 image</span>
+            </div>
+            <div class="upload-area" onclick="document.getElementById('profile-file').click()">
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">Click to upload profile picture</div>
+                <div class="upload-hint">PNG, JPG up to 5MB</div>
+                <input type="file" id="profile-file" class="file-input" accept="image/*" onchange="uploadProfileImage()">
+            </div>
+            <div style="text-align: center; margin-top: 1rem;">
+                <img id="profile-preview" src="" alt="Profile Preview" style="max-width: 150px; max-height: 150px; border-radius: 10px; border: 3px solid var(--accent); display: none;">
+            </div>
+        </div>
+
+        <!-- Skills Management -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h2><i>⚡</i> Skills</h2>
+                <span class="badge" id="skills-count">0</span>
+            </div>
+            
+            <div class="item-list" id="skills-list">
+                <div class="loading">Loading skills...</div>
+            </div>
+
+            <div class="add-form">
+                <h3 style="color: var(--accent); margin-bottom: 1rem;">Add New Skill</h3>
+                <div class="form-group">
+                    <label>Skill Name</label>
+                    <input type="text" id="skill-name" class="form-control" placeholder="e.g., Graphic Design">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="skill-category" class="form-control">
+                        <option value="design">Graphic Design</option>
+                        <option value="writing">Writing</option>
+                        <option value="development">Development</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Icon (emoji)</label>
+                    <input type="text" id="skill-icon" class="form-control" placeholder="🎨" value="📌">
+                </div>
+                <button class="btn btn-primary" onclick="addSkill()">Add Skill</button>
+            </div>
+        </div>
+
+        <!-- Projects Management -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h2><i>📁</i> Projects</h2>
+                <span class="badge" id="projects-count">0</span>
+            </div>
+
+            <div class="upload-area" onclick="document.getElementById('project-file').click()">
+                <div class="upload-icon">🖼️</div>
+                <div class="upload-text">Click to upload project image</div>
+                <div class="upload-hint">First upload image, then add details</div>
+                <input type="file" id="project-file" class="file-input" accept="image/*" onchange="handleProjectFileSelect()">
+            </div>
+            <div id="project-file-name" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; text-align: center;"></div>
+
+            <div class="add-form">
+                <div class="form-group">
+                    <label>Project Title</label>
+                    <input type="text" id="project-title" class="form-control" placeholder="e.g., Branding Project">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="project-description" class="form-control" placeholder="Describe the project..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="project-category" class="form-control">
+                        <option value="logos">Logos</option>
+                        <option value="posters">Posters</option>
+                        <option value="illustrations">Illustrations</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="addProject()">Add Project</button>
+            </div>
+
+            <h3 style="color: var(--accent); margin: 1.5rem 0 1rem;">Recent Projects</h3>
+            <div class="item-list" id="projects-list">
+                <div class="loading">Loading projects...</div>
+            </div>
+        </div>
+
+        <!-- Section Images Management -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h2><i>🖼️</i> Portfolio Images</h2>
+                <span class="badge" id="images-count">0</span>
+            </div>
+
+            <div class="form-group">
+                <label>Select Section</label>
+                <select id="section-select" class="form-control" onchange="loadSectionImages()">
+                    <option value="logos">Logos</option>
+                    <option value="posters">Posters</option>
+                    <option value="illustrations">Illustrations</option>
+                </select>
+            </div>
+
+            <div class="upload-area" onclick="document.getElementById('section-file').click()">
+                <div class="upload-icon">📤</div>
+                <div class="upload-text">Click to upload image to section</div>
+                <div class="upload-hint">PNG, JPG, GIF up to 5MB</div>
+                <input type="file" id="section-file" class="file-input" accept="image/*" onchange="uploadSectionImage()">
+            </div>
+
+            <div class="form-group">
+                <label>Image Caption (optional)</label>
+                <input type="text" id="image-caption" class="form-control" placeholder="e.g., Summer Sale Poster">
+            </div>
+
+            <h3 style="color: var(--accent); margin: 1rem 0;">Section Images</h3>
+            <div class="image-grid" id="images-grid">
+                <div class="loading">Loading images...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certifications Modal -->
+    <div class="modal" id="cert-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Manage Certifications</h3>
+                <button class="close-modal" onclick="closeCertModal()">&times;</button>
+            </div>
+            
+            <div id="certifications-list" class="item-list" style="max-height: 200px;">
+                <!-- Certifications will be loaded here -->
+            </div>
+
+            <div class="add-form" style="margin-top: 1rem;">
+                <h4 style="color: var(--accent); margin-bottom: 1rem;">Add Certification</h4>
+                <div class="form-group">
+                    <label>Certification Name</label>
+                    <input type="text" id="cert-name" class="form-control" placeholder="e.g., Adobe Certified Expert">
+                </div>
+                <div class="form-group">
+                    <label>Issuer</label>
+                    <input type="text" id="cert-issuer" class="form-control" placeholder="e.g., Adobe">
+                </div>
+                <div class="form-group">
+                    <label>Credential URL (optional)</label>
+                    <input type="url" id="cert-url" class="form-control" placeholder="https://...">
+                </div>
+                <button class="btn btn-primary" onclick="addCertification()">Add Certification</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" style="display: none;"></div>
+
+    <script>
+        let currentSkillId = null;
+        let selectedProjectFile = null;
+        let currentSkillData = {};
+
+        // ===== HAMBURGER MENU TOGGLE =====
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            loadSkills();
+            loadProjects();
+            loadSectionImages();
+            loadProfilePreview();
+        });
+
+        // ========== TOAST NOTIFICATIONS ==========
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // ========== STATS LOADING ==========
+        async function loadStats() {
+            try {
+                const skillsRes = await fetch('/api/admin/skills');
+                const skills = await skillsRes.json();
+                
+                const projectsRes = await fetch('/api/admin/projects');
+                const projects = await projectsRes.json();
+                
+                const logosRes = await fetch('/api/section/logos');
+                const logos = await logosRes.json();
+                const postersRes = await fetch('/api/section/posters');
+                const posters = await postersRes.json();
+                const illusRes = await fetch('/api/section/illustrations');
+                const illus = await illusRes.json();
+                
+                const totalImages = (logos.images?.length || 0) + 
+                                  (posters.images?.length || 0) + 
+                                  (illus.images?.length || 0);
+                
+                document.getElementById('total-skills').textContent = skills.length;
+                document.getElementById('total-certs').textContent = '0'; // Will update with actual count
+                document.getElementById('total-projects').textContent = projects.length;
+                document.getElementById('total-images').textContent = totalImages;
+                
+                document.getElementById('skills-count').textContent = skills.length;
+                document.getElementById('projects-count').textContent = projects.length;
+                document.getElementById('images-count').textContent = totalImages;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // ========== PROFILE MANAGEMENT ==========
+        async function loadProfilePreview() {
+            try {
+                const response = await fetch('/api/profile');
+                const profile = await response.json();
+                if (profile.profile_image_url) {
+                    const preview = document.getElementById('profile-preview');
+                    preview.src = profile.profile_image_url;
+                    preview.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function uploadProfileImage() {
+            const fileInput = document.getElementById('profile-file');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/api/admin/upload/profile', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('profile-preview').src = data.url;
+                    document.getElementById('profile-preview').style.display = 'block';
+                    showToast('Profile image uploaded successfully!');
+                }
+            } catch (error) {
+                console.error('Error uploading profile:', error);
+                showToast('Error uploading image', 'error');
+            }
+        }
+
+        // ========== SKILLS MANAGEMENT ==========
+        async function loadSkills() {
+            try {
+                const response = await fetch('/api/admin/skills');
+                const skills = await response.json();
+                
+                const list = document.getElementById('skills-list');
+                list.innerHTML = '';
+                
+                if (skills.length === 0) {
+                    list.innerHTML = '<div class="empty-state"><i>📌</i><br>No skills added yet</div>';
+                    return;
+                }
+                
+                skills.forEach(skill => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.innerHTML = `
+                        <div class="item-icon">${skill.icon || '📌'}</div>
+                        <div class="item-info">
+                            <div class="item-title">${skill.name}</div>
+                            <div class="item-subtitle">${skill.category}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button onclick="manageCertifications(${skill.id}, '${skill.name}')" title="Manage Certifications">📜</button>
+                            <button onclick="editSkill(${skill.id})" title="Edit">✏️</button>
+                            <button class="delete-btn" onclick="deleteSkill(${skill.id})" title="Delete">🗑️</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error loading skills:', error);
+                document.getElementById('skills-list').innerHTML = '<div class="empty-state">Error loading skills</div>';
+            }
+        }
+
+        async function addSkill() {
+            const skill = {
+                name: document.getElementById('skill-name').value.trim(),
+                category: document.getElementById('skill-category').value,
+                icon: document.getElementById('skill-icon').value.trim() || '📌'
+            };
+            
+            if (!skill.name) {
+                showToast('Please enter a skill name', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/skills', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(skill)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('skill-name').value = '';
+                    document.getElementById('skill-icon').value = '📌';
+                    loadSkills();
+                    loadStats();
+                    showToast('Skill added successfully!');
+                }
+            } catch (error) {
+                console.error('Error adding skill:', error);
+                showToast('Error adding skill', 'error');
+            }
+        }
+
+        async function deleteSkill(id) {
+            if (!confirm('Are you sure you want to delete this skill?')) return;
+            
+            try {
+                const response = await fetch(`/api/admin/skills?id=${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadSkills();
+                    loadStats();
+                    showToast('Skill deleted successfully!');
+                }
+            } catch (error) {
+                console.error('Error deleting skill:', error);
+                showToast('Error deleting skill', 'error');
+            }
+        }
+
+        // ========== CERTIFICATIONS MANAGEMENT ==========
+        function manageCertifications(skillId, skillName) {
+            currentSkillId = skillId;
+            document.getElementById('cert-modal').style.display = 'flex';
+            loadCertifications(skillId);
+        }
+
+        async function loadCertifications(skillId) {
+            try {
+                const response = await fetch(`/api/certifications/${skillId}`);
+                const certs = await response.json();
+                
+                const list = document.getElementById('certifications-list');
+                list.innerHTML = '';
+                
+                if (certs.length === 0) {
+                    list.innerHTML = '<div class="empty-state">No certifications yet</div>';
+                    return;
+                }
+                
+                certs.forEach(cert => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${cert.name}</div>
+                            <div class="item-subtitle">${cert.issuer}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="delete-btn" onclick="deleteCertification(${cert.id})">🗑️</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error loading certifications:', error);
+            }
+        }
+
+        async function addCertification() {
+            const cert = {
+                name: document.getElementById('cert-name').value.trim(),
+                issuer: document.getElementById('cert-issuer').value.trim(),
+                credential_url: document.getElementById('cert-url').value.trim(),
+                skill_id: currentSkillId
+            };
+            
+            if (!cert.name || !cert.issuer) {
+                showToast('Please fill in all required fields', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/certifications', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(cert)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('cert-name').value = '';
+                    document.getElementById('cert-issuer').value = '';
+                    document.getElementById('cert-url').value = '';
+                    loadCertifications(currentSkillId);
+                    showToast('Certification added successfully!');
+                }
+            } catch (error) {
+                console.error('Error adding certification:', error);
+                showToast('Error adding certification', 'error');
+            }
+        }
+
+        async function deleteCertification(id) {
+            if (!confirm('Are you sure?')) return;
+            
+            try {
+                const response = await fetch(`/api/admin/certifications?id=${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadCertifications(currentSkillId);
+                    showToast('Certification deleted successfully!');
+                }
+            } catch (error) {
+                console.error('Error deleting certification:', error);
+                showToast('Error deleting certification', 'error');
+            }
+        }
+
+        function closeCertModal() {
+            document.getElementById('cert-modal').style.display = 'none';
+            currentSkillId = null;
+        }
+
+        // ========== PROJECTS MANAGEMENT ==========
+        function handleProjectFileSelect() {
+            const fileInput = document.getElementById('project-file');
+            selectedProjectFile = fileInput.files[0];
+            if (selectedProjectFile) {
+                document.getElementById('project-file-name').textContent = `Selected: ${selectedProjectFile.name}`;
+            }
+        }
+
+        async function addProject() {
+            if (!selectedProjectFile) {
+                showToast('Please select an image first', 'warning');
+                return;
+            }
+            
+            const project = {
+                title: document.getElementById('project-title').value.trim(),
+                description: document.getElementById('project-description').value.trim(),
+                category: document.getElementById('project-category').value
+            };
+            
+            if (!project.title) {
+                showToast('Please enter a project title', 'warning');
+                return;
+            }
+            
+            try {
+                // First create the project
+                const projectResponse = await fetch('/api/admin/projects', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(project)
+                });
+                
+                const projectResult = await projectResponse.json();
+                
+                if (projectResult.success) {
+                    // Then upload the image
+                    const formData = new FormData();
+                    formData.append('file', selectedProjectFile);
+                    formData.append('project_id', projectResult.project.id);
+                    
+                    const uploadResponse = await fetch('/api/admin/upload/projects', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (uploadResponse.ok) {
+                        // Reset form
+                        document.getElementById('project-title').value = '';
+                        document.getElementById('project-description').value = '';
+                        document.getElementById('project-file').value = '';
+                        document.getElementById('project-file-name').textContent = '';
+                        selectedProjectFile = null;
+                        
+                        loadProjects();
+                        loadStats();
+                        showToast('Project added successfully!');
+                    }
+                }
+            } catch (error) {
+                console.error('Error adding project:', error);
+                showToast('Error adding project', 'error');
+            }
+        }
+
+        async function loadProjects() {
+            try {
+                const response = await fetch('/api/admin/projects');
+                const projects = await response.json();
+                
+                const list = document.getElementById('projects-list');
+                list.innerHTML = '';
+                
+                if (projects.length === 0) {
+                    list.innerHTML = '<div class="empty-state"><i>📁</i><br>No projects yet</div>';
+                    return;
+                }
+                
+                projects.slice(0, 5).forEach(project => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.innerHTML = `
+                        ${project.image ? `<img src="${project.image}" class="item-preview">` : '<div class="item-icon">📁</div>'}
+                        <div class="item-info">
+                            <div class="item-title">${project.title}</div>
+                            <div class="item-subtitle">${project.category}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="delete-btn" onclick="deleteProject(${project.id})">🗑️</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        async function deleteProject(id) {
+            if (!confirm('Are you sure you want to delete this project?')) return;
+            
+            try {
+                const response = await fetch(`/api/admin/projects?id=${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadProjects();
+                    loadStats();
+                    showToast('Project deleted successfully!');
+                }
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                showToast('Error deleting project', 'error');
+            }
+        }
+
+        // ========== SECTION IMAGES MANAGEMENT ==========
+        async function uploadSectionImage() {
+            const fileInput = document.getElementById('section-file');
+            const file = fileInput.files[0];
+            const caption = document.getElementById('image-caption').value.trim();
+            const section = document.getElementById('section-select').value;
+            
+            if (!file) {
+                showToast('Please select an image', 'warning');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('caption', caption);
+            
+            try {
+                const response = await fetch(`/api/admin/upload/${section}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('section-file').value = '';
+                    document.getElementById('image-caption').value = '';
+                    loadSectionImages();
+                    loadStats();
+                    showToast('Image uploaded successfully!');
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                showToast('Error uploading image', 'error');
+            }
+        }
+
+        async function loadSectionImages() {
+            const section = document.getElementById('section-select').value;
+            
+            try {
+                const response = await fetch(`/api/section/${section}`);
+                const data = await response.json();
+                
+                const grid = document.getElementById('images-grid');
+                grid.innerHTML = '';
+                
+                if (!data.images || data.images.length === 0) {
+                    grid.innerHTML = '<div class="empty-state"><i>🖼️</i><br>No images in this section</div>';
+                    return;
+                }
+                
+                data.images.forEach(img => {
+                    const div = document.createElement('div');
+                    div.className = 'image-grid-item';
+                    div.innerHTML = `
+                        <img src="${img.url}" alt="${img.caption || ''}">
+                        <button class="delete-img" onclick="deleteSectionImage('${section}', ${img.id})">×</button>
+                        ${img.caption ? `<div class="image-caption">${img.caption}</div>` : ''}
+                    `;
+                    grid.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error loading images:', error);
+            }
+        }
+
+        async function deleteSectionImage(section, id) {
+            if (!confirm('Are you sure you want to delete this image?')) return;
+            
+            try {
+                const response = await fetch(`/api/admin/section/${section}/images/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadSectionImages();
+                    loadStats();
+                    showToast('Image deleted successfully!');
+                }
+            } catch (error) {
+                console.error('Error deleting image:', error);
+                showToast('Error deleting image', 'error');
+            }
+        }
+
+        // ========== LOGOUT ==========
+        async function logout() {
+            try {
+                await fetch('/api/admin/logout', { method: 'POST' });
+                window.location.href = '/admin';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('cert-modal');
+            if (event.target === modal) {
+                closeCertModal();
+            }
+        }
+    </script>
+</body>
+</html>
